@@ -1,5 +1,51 @@
 # OpenAPI
 
+
+```yaml
+# OpenAPI Object
+openapi: 3.1.0
+info: 
+  title: Tic Tac Toe
+  description: |
+    This API allows writing down marks on a Tic Tac Toe board
+    and requesting the state of the board or of individual squares.
+  version: 1.0.0
+paths:
+  # Whole board Operations
+  /board:
+    get:
+      summary: Get the whole board
+      description: Retrieves the current state of the board and the winner.
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    winner:
+                      type: string
+                      enum: [".", "X", "O"]
+                      description: |
+                        Winner of the game. `.` means nobody has won yet.
+                    board:
+                      type: array
+                      maxItems: 3
+                      minItems: 3
+                      items: 
+                        type: array
+                        minItems: 3
+                        maxItems: 3
+                        items:
+                          type: string
+                          enum: [".", "X", "O"]
+                          description: |
+                            Possible values for a board square.
+                            `.` means empty square.
+...
+```
+
 ## OpenAPI Document
 
 OpenAPI document describes an HTTP-like API in one or more machine-readable files.
@@ -86,25 +132,100 @@ paths: # Path Object
           content:
 ```
 
-Endpoints (also called Operations or Routes) are called **Paths** in the OAS. the **Paths Object** is accessible ghrough the **paths** field in the root **OpenAPI Object**
+- OpenAPI Object
+  - openapi
+  - info
+  - paths (Path Object)
+    - /endpoint1..N (Path Item Object)
+      - get, put, post, delete (Operation Object)
+        - summary
+        - description
+        - requestBody
+        - operationID
+        - responses (Responses Object)
+          - HTTP code1..N (Response Object)
+            - description
+            - content
 
-Every field in the **Paths Object** is a **Path Item Object** describing one API endpint.
-
-Paths **must start with a forward slash**.
+- API Endpoints are called **Paths**
+- Every field in the Paths Object is a Path Item Object, describing one API endpoint
+  - Use field instead of an Array to enforce endpoint uniqueness at syntax level
+- **Paths must start with a forward slash**
 
 ```yaml
-# OpenAPI Object
 openapi: 3.1.0
-info: 
+info:
   title: Tic Tac Toe
   description: |
     This API allows writing down marks on a Tic Tac Toe board
     and requesting the state of the board or of individual squares.
   version: 1.0.0
 paths:
-  # Whole board Operations
   /board:
-  ...
+    ...
 ```
 
+### Path Item Object
 
+- Path Item Object describes HTTP operations that can be performed on a path with a separate Operation Object
+- Operations match HTTP methods names like ```get```, ```put``` or ```delete```
+- Also accepts common properties for all operations on the path like ```summary``` or ```description```
+
+```yaml
+paths:
+  /board:
+    get: 
+      ...
+    put:
+      ...
+```
+
+### Operation Object
+
+- operation's parameters
+- payload
+- possible server responses
+
+```yaml
+paths:
+  /board:
+    get:
+      sumary: Get the Whole Board
+      description: Retrieves the current state of the board and the winner.
+      parameters:
+        ...
+      responses:
+        ...
+```
+
+### Responses Object
+
+- expected answers to the request
+- each field is an HTTP response
+- **enclosed in quotation marks**
+- At least one response must be given
+
+```yaml
+  /board
+    get:
+      responses:
+      "200":
+        ...
+      "404":
+        ...
+```
+
+### Response Object
+
+- description of the meaning of the response
+- Compementing the HTTP response codes
+
+```yaml
+  /board
+    get:
+      responses:
+      "200":
+        description: Everything went fine.
+        content:
+          ...
+```
