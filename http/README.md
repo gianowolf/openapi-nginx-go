@@ -1,9 +1,26 @@
-#### HTTP: Hypertext Transfer Protocol
 
-- Bsae de cualquier intercambio de datos en la Web
-- Protocolo estructura cliente-servidor
-- Por ejemplo una pagina web completa resulta la union de diferentes documentos recibidos, por ejemplo un css, un js, imagenes y el html 
-- Funciona en capa de aplicacion, se transmite sobre protocolo TCP o TLS (encriptado) de capa 4.
+# HTTP: Hypertext Transfer Protocol
+
+- [HTTP: Hypertext Transfer Protocol](#http-hypertext-transfer-protocol)
+  - [Arquitectura](#arquitectura)
+  - [Proxies](#proxies)
+  - [Caracteristicas de HTTP](#caracteristicas-de-http)
+  - [Flujo HTTP](#flujo-http)
+  - [Mensajes HTTP](#mensajes-http)
+    - [Peticion HTTP](#peticion-http)
+    - [Respuestas](#respuestas)
+  - [Recursos Web](#recursos-web)
+    - [URLs](#urls)
+    - [URNs](#urns)
+    - [Sintaxis](#sintaxis)
+  - [Tipos MIME](#tipos-mime)
+    - [Sintaxis](#sintaxis-1)
+      - [Tipos Discretos](#tipos-discretos)
+      - [Tipos multiparte](#tipos-multiparte)
+        - [multipart/form-data](#multipartform-data)
+    - [MIME Sniffing](#mime-sniffing)
+    - [Metodos](#metodos)
+- [HTTP Responses](#http-responses)
 
 Se utiliza tanto para las webs como para imagenes, videos, datos de formularios, etc. 
 
@@ -120,9 +137,30 @@ audio/*
 indican documentos que se encuentran en partes, posiblemente con diferentes tipos de MIME. De esta forma se representan documentos compuestos.
 
 ##### multipart/form-data
-
+ 
 El tipo ```multipart/form-data```` se utiliza para enviar contenido de un formulario HTML completo desde el browser sl sv.
 
 ### MIME Sniffing
 
 La ausencia de tipo MIME hace que algunos navegadores adivinen el tipo correcto observando el recurso. Esta practica afecta la seguridad ya que algunos tipos MIME representan contenieo ejecutable
+
+### Metodos
+
+- GET: solicita una representacion de un recurso especifico. 
+- HEAD: solicita respuesta identica a GET pero sin el cuerpo de la respuesta
+- POST: Enviar una entidad a un recurso especifico.
+- PUT: Reemplaza las representaciones actuales del recurso de destino, con la carga util de la peticion
+- DELETE: Borra el recurso especifico
+- CONNECT: establece un tunel hacia el servidor identificado por el recurso
+- TRACE: realiza una prueba de bucle de retorno de mensaje a lo largo de la ruta al recurso de destino
+- PATCH: Utilizado para aplicar modificaciones parciales en un recurso
+
+# HTTP Responses
+
+VERB | CRUD | ENTIRE COLLECTION | SPECIFIC ITEM 
+-- | -- | -- | --
+POST | Create |  201 (CREATED), Location header, link to collection/{id} | 404, 409 (exists)
+GET | Red | 200 OK, list of collection using pagination | 200 single item, 404
+PUT | Update/Replace | 405 Not Allowed | 200 OK, 204 No content, 404 Not found
+PATCH | Update/Modify | 405 Not allowed | 200, 204, 404
+DELETE | Delete | 405 Not Allowd | 200, 404
